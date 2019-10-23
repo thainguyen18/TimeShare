@@ -13,6 +13,7 @@
 		4BC744A7235FE5C00032B5A2 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC744A6235FE5C00032B5A2 /* MessagesViewController.swift */; };
 		4BC744AA235FE5C00032B5A2 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4BC744A8235FE5C00032B5A2 /* MainInterface.storyboard */; };
 		4BC744AC235FE5C00032B5A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4BC744AB235FE5C00032B5A2 /* Assets.xcassets */; };
+		4BC744B8235FF3120032B5A2 /* EventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC744B7235FF3110032B5A2 /* EventViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		4BC744A9235FE5C00032B5A2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		4BC744AB235FE5C00032B5A2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4BC744AD235FE5C00032B5A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4BC744B7235FF3110032B5A2 /* EventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 			children = (
 				4BC744A6235FE5C00032B5A2 /* MessagesViewController.swift */,
 				4BC744A8235FE5C00032B5A2 /* MainInterface.storyboard */,
+				4BC744B7235FF3110032B5A2 /* EventViewController.swift */,
 				4BC744AB235FE5C00032B5A2 /* Assets.xcassets */,
 				4BC744AD235FE5C00032B5A2 /* Info.plist */,
 			);
@@ -210,6 +213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BC744A7235FE5C00032B5A2 /* MessagesViewController.swift in Sources */,
+				4BC744B8235FF3120032B5A2 /* EventViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,7 +289,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -339,7 +343,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -356,6 +360,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4EFH9TWN7W;
 				INFOPLIST_FILE = "TimeShare MessagesExtension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -365,7 +370,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -376,6 +381,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 4EFH9TWN7W;
 				INFOPLIST_FILE = "TimeShare MessagesExtension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -385,7 +391,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

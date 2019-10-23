@@ -11,6 +11,12 @@ import Messages
 
 class MessagesViewController: MSMessagesAppViewController {
     
+    
+    @IBAction func createNewEvent(_ sender: UIButton) {
+        requestPresentationStyle(.expanded)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -23,6 +29,10 @@ class MessagesViewController: MSMessagesAppViewController {
         // This will happen when the extension is about to present UI.
         
         // Use this method to configure the extension and restore previously stored state.
+        
+        if presentationStyle == .expanded {
+            displayEventViewController(conversation: conversation, identifier: "SelectDates")
+        }
     }
     
     override func didResignActive(with conversation: MSConversation) {
@@ -56,12 +66,146 @@ class MessagesViewController: MSMessagesAppViewController {
         // Called before the extension transitions to a new presentation style.
     
         // Use this method to prepare for the change in presentation style.
+        
+        for child in children {
+            child.willMove(toParent: nil)
+            child.view.removeFromSuperview()
+            child.removeFromParent()
+        }
+        
+        if presentationStyle == .expanded {
+            displayEventViewController(conversation: activeConversation, identifier: "CreateEvent")
+        }
     }
     
     override func didTransition(to presentationStyle: MSMessagesAppPresentationStyle) {
         // Called after the extension transitions to a new presentation style.
     
         // Use this method to finalize any behaviors associated with the change in presentation style.
+    }
+    
+    func displayEventViewController(conversation: MSConversation?, identifier: String) {
+        guard let conversation = conversation else { return }
+        
+        guard let vc = storyboard?.instantiateViewController(withIdentifier: identifier) as? EventViewController else { return }
+        
+        
+        // load dates and votes if any
+        vc.load(from: conversation.selectedMessage)
+        
+        // Set delegate
+        vc.delegate = self
+        
+        addChild(vc)
+        
+        // Set frame for contained view controller
+        vc.view.frame = view.bounds
+        vc.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(vc.view)
+        
+        // Autolayout constraints
+        vc.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        vc.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        vc.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        vc.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        // Tell child that it has moved to parent view controller
+        vc.didMove(toParent: self)
+    }
+    
+    func createMessage(with dates:[Date], votes: [Int]) {
+        requestPresentationStyle(.compact)
+        
+        guard let conversation = activeConversation else { return }
+        
+        // Convert all our dates and votes to URLQueryItem objects
+        var components = URLComponents()
+        var items = [URLQueryItem]()
+        
+        for (index, date) in dates.enumerated() {
+            let dateItem = URLQueryItem(name: "date-\(index)", value: string(from: date))
+            items.append(dateItem)
+            
+            let voteItem = URLQueryItem(name: "vote-\(index)", value: String(votes[index]))
+            items.append(voteItem)
+        }
+        
+        components.queryItems = items
+        
+        // use existing session or create one
+        let session = conversation.selectedMessage?.session ?? MSSession()
+        
+        // create a message from session and assign it the URL we created from dates and votes
+        let message = MSMessage(session: session)
+        message.url = components.url
+        
+        // Create a blank default message layout
+        let layout = MSMessageTemplateLayout()
+        layout.caption = "I voted"
+        layout.image = render(dates: dates)
+        message.layout = layout
+        
+        // Insert it into the conversation
+        conversation.insert(message) { error in
+            if let error = error {
+                print(error)
+            }
+        }
+    }
+    
+    func string(from date:Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        dateFormatter.dateFormat = "YYYY-MM-dd-HH-mm"
+        return dateFormatter.string(from: date)
+    }
+    
+    func render(dates: [Date]) -> UIImage {
+        // define 20 point padding
+        let inset: CGFloat = 20
+        
+        // create attributes for drawing using dynamic type so that we respect the user's font choices
+        let attributes = [NSAttributedString.Key.font : UIFont.preferredFont(forTextStyle: .body),
+                          NSAttributedString.Key.foregroundColor : UIColor.darkGray
+        ]
+        
+        // make a simple string out of dates
+        var stringToRender = ""
+        
+        dates.forEach {
+            stringToRender += DateFormatter.localizedString(from: $0, dateStyle: .long, timeStyle: .short) + "\n"
+        }
+        
+        // trim last line break and create attributed string
+        let trimmed = stringToRender.trimmingCharacters(in: .whitespacesAndNewlines)
+        let atttributedString = NSAttributedString(string: trimmed, attributes: attributes)
+        
+        // calculate size required to draw attributed string
+        var imageSize = atttributedString.size()
+        imageSize.width += inset * 2
+        imageSize.height += inset * 2
+        
+        // create image format @3x scale
+        let format = UIGraphicsImageRendererFormat()
+        format.opaque = true
+        format.scale = 3
+        
+        // create renderer at correct size using above format
+        let renderer = UIGraphicsImageRenderer(size: imageSize, format: format)
+        
+        // render series of instructions to 'image'
+        let image = renderer.image { ctx in
+            //draw a solid white background
+            UIColor.white.set()
+            
+            ctx.fill(CGRect(origin: .zero, size: imageSize))
+            
+            // draw text on top using insets defined
+            atttributedString.draw(at: CGPoint(x: inset, y: inset))
+        }
+        
+        // send image back
+        return image
     }
 
 }
